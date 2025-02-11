@@ -1,0 +1,2 @@
+mysql:
+  dsn: "root:Zhao06181121@tcp(localhost:3306)/ginChat?charset=utf8mb4&parseTime=True&loc=Local"
