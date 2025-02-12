@@ -24,7 +24,7 @@ type User struct {
 	IsLogout      bool      `gorm:"type:bool" json:"is_logout"`
 }
 
-func (table *User) TableName() string {
+func (u *User) TableName() string {
 	return "user"
 }
 
