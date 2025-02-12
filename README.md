@@ -11,7 +11,9 @@ webSocket，channel/goroutine，gin，gorm，swagger，logrus auth，sql，nosql
 
 # 核心功能
 1.发送和接收消息，文字 表情 图片 音频
+
 2.访客，点对点，群聊
+
 3.广播，快捷回复，撤回，心跳检测...
 
 # 消息发送流程

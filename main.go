@@ -16,6 +16,11 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	// utils.DB.AutoMigrate(&models.User{})
+	// err = utils.InitRedis()
+	// if err != nil {
+	fmt.Println(err)
+	// }
 	r := router.Router()
 	err = r.Run(":8080")
 	if err != nil {

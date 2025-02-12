@@ -2,16 +2,18 @@ package models
 
 import (
 	"GINCHAT/utils"
+	"fmt"
 	"gorm.io/gorm"
 	"time"
 )
 
-type UserBasic struct {
+type User struct {
 	gorm.Model
+	Salt          string    `gorm:"type:varchar(255);not null" json:"salt"` // 加密随机数
 	Name          string    `gorm:"type:varchar(255);not null" json:"name"`
 	Password      string    `gorm:"type:varchar(255);not null" json:"password"`
-	Phone         string    `gorm:"type:varchar(255);not null" json:"phone"`
-	Email         string    `gorm:"type:varchar(255);not null" json:"email"`
+	Phone         string    `gorm:"type:varchar(255);not null" json:"phone" valid:"matches(^1[3-9]{1}\\d{9}$)"`
+	Email         string    `gorm:"type:varchar(255);not null" json:"email" valid:"email"`
 	Identity      string    `gorm:"type:varchar(255);not null" json:"identity"`
 	ClientIP      string    `gorm:"type:varchar(255);not null" json:"client_ip"`
 	ClientPort    string    `gorm:"type:varchar(255);not null" json:"client_port"`
@@ -22,12 +24,53 @@ type UserBasic struct {
 	IsLogout      bool      `gorm:"type:bool" json:"is_logout"`
 }
 
-func (table *UserBasic) TableName() string {
-	return "user_basic"
+func (table *User) TableName() string {
+	return "user"
 }
 
-func GetUserList() []*UserBasic {
-	userList := make([]*UserBasic, 0)
+func GetUserList() []*User {
+	userList := make([]*User, 0)
 	utils.DB.Find(&userList)
 	return userList
+}
+
+func FindUserByName(name string) User {
+	var user User
+	utils.DB.Where("name = ?", name).First(&user)
+	return user
+}
+
+func FindUserByPhone(phone string) User {
+	var user User
+	utils.DB.Where("phone = ?", phone).First(&user)
+	return user
+}
+
+func FindUserByEmail(email string) User {
+	var user User
+	utils.DB.Where("email = ?", email).First(&user)
+	return user
+}
+
+func LoginUserByNameAnPwd(name string, password string) User {
+	var user User
+	utils.DB.Where("name = ? and password = ?", name, password).First(&user)
+	// token加密
+	str := fmt.Sprintf("%d", time.Now().Unix())
+	temp := utils.MD5Encode(str)
+	utils.DB.Model(&user).Where("id = ?", user.ID).Update("identity", temp)
+	return user
+}
+
+func CreateUser(user User) *gorm.DB {
+	return utils.DB.Create(&user)
+}
+
+func DeleteUser(userID uint) *gorm.DB {
+	var user User
+	return utils.DB.Where("id = ?", userID).Delete(&user)
+}
+
+func UpdateUser(user User) *gorm.DB {
+	return utils.DB.Where("id = ?", user.ID).Updates(&user)
 }
