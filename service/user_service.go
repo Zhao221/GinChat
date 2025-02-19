@@ -1,8 +1,8 @@
 package service
 
 import (
-	"GINCHAT/models"
-	"GINCHAT/utils"
+	"Chat/models"
+	"Chat/utils"
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"

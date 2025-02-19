@@ -1,8 +1,8 @@
 package router
 
 import (
-	"GINCHAT/docs"
-	"GINCHAT/service"
+	"Chat/docs"
+	"Chat/service"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"

@@ -1,4 +1,4 @@
-module GINCHAT
+module Chat
 
 go 1.23
 

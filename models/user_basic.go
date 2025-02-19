@@ -1,7 +1,7 @@
 package models
 
 import (
-	"GINCHAT/utils"
+	"Chat/utils"
 	"fmt"
 	"gorm.io/gorm"
 	"time"

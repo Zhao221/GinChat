@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GINCHAT/router"
-	"GINCHAT/utils"
+	"Chat/router"
+	"Chat/utils"
 	"fmt"
 )
 
