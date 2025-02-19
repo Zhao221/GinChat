@@ -33,33 +33,23 @@ func GetUserList(c *gin.Context) {
 // @Success 200 {string} json{"code","message"}
 // @Router /user/createUser [post]
 func CreateUser(c *gin.Context) {
-	var user models.User
-	if err := c.ShouldBind(&user); err != nil {
+	name := c.Request.FormValue("name")
+	password := c.Request.FormValue("password")
+	identity := c.Request.FormValue("Identity")
+	if name == "" || password == "" || identity == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": http.StatusBadRequest,
-			"msg":  err.Error(),
+			"msg":  "name or password can not be null",
 		})
+		return
 	}
-	data1 := models.FindUserByName(user.Name)
+	data1 := models.FindUserByName(name)
 	if data1.Name != "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": http.StatusBadRequest,
 			"msg":  "用户已注册",
 		})
-	}
-	data2 := models.FindUserByEmail(user.Email)
-	if data2.Name != "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "用户已注册",
-		})
-	}
-	data3 := models.FindUserByPhone(user.Phone)
-	if data3.Name != "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "用户已注册",
-		})
+		return
 	}
 	// 用户密码加密
 	// 设置随机数种子，以确保每次运行程序时生成不同的随机数
@@ -67,9 +57,11 @@ func CreateUser(c *gin.Context) {
 	// 生成一个 0 到 999999 之间的随机整数
 	randomNum := rand.Intn(1000000)
 	salt := fmt.Sprintf("%06d", randomNum)
-	user.Salt = salt
-	user.Password = utils.MakePassword(user.Password, salt)
-	models.CreateUser(user)
+	data1.Name = name
+	data1.Salt = salt
+	data1.Password = utils.MakePassword(data1.Password, salt)
+	data1.Identity = identity
+	models.CreateUser(data1)
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"msg":  "success",
